@@ -10,7 +10,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 const LINE_1 =
   "Don't take the extra shift on the night your son asks you to watch his first football match.";
 const LINE_2 =
-  "He scored, looked for you in the stands, and stopped asking you to come to anything after that.";
+  "He scored, looked for you in the stands, and never asked you to come to anything again.";
 
 const ENTRY = `${LINE_1}\n${LINE_2}\n`;
 
@@ -28,6 +28,11 @@ function validate(text: string): void {
   for (const line of lines) {
     if (!line.endsWith(".")) {
       throw new Error(`each line must be one sentence: ${line}`);
+    }
+    // One sentence per line: exactly one terminal period, no mid-line
+    // sentence break, so the entry stays two lines and two sentences.
+    if ((line.match(/\./g) ?? []).length !== 1) {
+      throw new Error(`each line must be exactly one sentence: ${line}`);
     }
   }
 }
